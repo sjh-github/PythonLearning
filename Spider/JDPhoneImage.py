@@ -1,6 +1,7 @@
+# 爬取京东手机图片
+
 import re
 from urllib import request
-
 
 def craw(url, page):
     html1 = request.urlopen(url).read()
@@ -12,19 +13,17 @@ def craw(url, page):
     imagelist = re.compile(pat2).findall(result1)
     x = 1
     for imageurl in imagelist:
-        imagename = 'D:/Baidu/' + str(page) + str(x) + '.jpg'
+        imagename = 'D:\\JingDong\\' + str(page) + str(x) + '.jpg'
         imageurl = 'http://' + imageurl
         print(imageurl)
         try:
             request.urlretrieve(imageurl, filename=imagename)
-        except request.URLError as e:
-            if hasattr(e, 'code'):
-                x += 1
-            if hasattr(e, 'reason'):
-                x += 1
+        except request.HTTPError as e:
+            print(e.code)
+            print(e.reason)
         x += 1
 
-
-for i in range(1, 2):
+# 爬取1，2两页
+for i in range(1, 3):
     url = 'http://list.jd.com/list.html?cat=9987,653,655&page=' + str(i)
     craw(url, i)
